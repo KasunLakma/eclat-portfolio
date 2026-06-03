@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Menu, ArrowUpRight, Volume2, VolumeX } from 'lucide-react';
+import profileData from '@/src/data/profile.json';
+import { getProfile } from './admin/actions';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +12,35 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const videoRef = useRef(null);
 
-  // Focus trap / handle ESC key to close modal
+  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const [profile, setProfile] = useState(profileData);
+
+  useEffect(() => {
+    async function loadLatestProfile() {
+      const latest = await getProfile();
+      if (latest) {
+        setProfile(latest);
+      }
+    }
+    loadLatestProfile();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formState.name || !formState.email || !formState.message) return;
+    setIsSubmitting(true);
+    // Simulate API request
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsSubmitting(false);
+    setSubmitted(true);
+    setFormState({ name: '', email: '', message: '' });
+    setTimeout(() => setSubmitted(false), 4000);
+  };
+
+  // Focus trap / handle ESC key to close showreel modal
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -37,13 +67,13 @@ export default function Home() {
   }, [isMuted, isOpen]);
 
   return (
-    <main className="relative min-h-screen bg-[#060608] text-white flex flex-col justify-between overflow-hidden">
+    <main className="relative min-h-screen bg-[#060608] text-white flex flex-col overflow-y-auto overflow-x-hidden scroll-smooth">
       
       {/* =========================================================================
-          BACKGROUND VISUALS & AMBIEINT GLOWS
+          BACKGROUND VISUALS & AMBIENT GLOWS
           ========================================================================= */}
       
-      {/* Purple Glow Spot - Animated Smoothly */}
+      {/* Top Purple Glow Spot - Animated Smoothly */}
       <motion.div
         animate={{
           x: [0, 60, -30, 0],
@@ -59,7 +89,7 @@ export default function Home() {
         className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-900/10 blur-[140px] pointer-events-none mix-blend-screen z-0"
       />
 
-      {/* Deep Blue Glow Spot - Animated Smoothly */}
+      {/* Top Deep Blue Glow Spot - Animated Smoothly */}
       <motion.div
         animate={{
           x: [0, -50, 40, 0],
@@ -72,11 +102,25 @@ export default function Home() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] rounded-full bg-blue-950/15 blur-[150px] pointer-events-none mix-blend-screen z-0"
+        className="absolute top-[20%] right-[-10%] w-[700px] h-[700px] rounded-full bg-blue-950/15 blur-[150px] pointer-events-none mix-blend-screen z-0"
       />
 
-      {/* Cinematic Portrait Backdrop - Shifted Right with Luxury Overlays */}
-      <div className="absolute top-0 right-0 w-full md:w-[60%] h-full pointer-events-none z-0">
+      {/* Gallery Section Ambient Glow (Scroll Transition Support) */}
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 0.92, 1],
+          opacity: [0.08, 0.16, 0.12, 0.08]
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-[110vh] left-[-20%] w-[800px] h-[800px] rounded-full bg-purple-950/10 blur-[160px] pointer-events-none mix-blend-screen z-0"
+      />
+
+      {/* Cinematic Portrait Backdrop - Confined to Hero Viewport Height */}
+      <div className="absolute top-0 right-0 w-full md:w-[60%] h-[100vh] pointer-events-none z-0 overflow-hidden">
         <div 
           className="w-full h-full bg-cover bg-right md:bg-center bg-no-repeat opacity-15 md:opacity-25 transition-opacity duration-1000"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1920&q=80')" }}
@@ -94,9 +138,17 @@ export default function Home() {
           ========================================================================= */}
       <header className="z-30 w-full px-6 py-6 md:py-8 max-w-7xl mx-auto flex justify-between items-center relative">
         {/* Brand Logo & Subtext */}
-        <div className="flex flex-col select-none">
-          <span className="font-cinzel text-xl md:text-2xl tracking-[0.35em] text-white font-medium leading-none">É C L A T</span>
-          <span className="font-sans text-[8px] md:text-[9px] tracking-[0.3em] uppercase text-zinc-500 mt-2 font-light">By RG Graphic</span>
+        <div className="flex flex-col items-start select-none max-w-max">
+          <div className="w-full flex justify-between font-cinzel text-lg md:text-xl font-semibold text-white leading-none">
+            <span>É</span>
+            <span>C</span>
+            <span>L</span>
+            <span>A</span>
+            <span>T</span>
+          </div>
+          <span className="font-sans text-[9px] md:text-[10px] tracking-[0.15em] uppercase text-white/40 mt-3 font-light whitespace-nowrap block text-left border-t border-white/5 pt-2 w-full">
+            BY BLACK LEOPARD ENTERTAINMENT
+          </span>
         </div>
 
         {/* Navigation pill - Frosted Glass */}
@@ -145,7 +197,7 @@ export default function Home() {
       {/* =========================================================================
           HERO CONTENT SECTION
           ========================================================================= */}
-      <section className="flex-1 w-full max-w-7xl mx-auto px-6 flex flex-col justify-center relative z-10 py-12 md:py-24">
+      <section id="home" className="min-h-[85vh] md:min-h-[90vh] w-full max-w-7xl mx-auto px-6 flex flex-col justify-center relative z-10 py-12 md:py-24">
         <div className="max-w-2xl flex flex-col gap-6 md:gap-8 text-left">
           
           {/* Subtitle Indicator */}
@@ -157,7 +209,7 @@ export default function Home() {
           >
             <span className="h-[1px] w-6 bg-zinc-600"></span>
             <span className="text-[9px] md:text-[10px] tracking-[0.45em] text-zinc-400 font-light uppercase">
-              Award-Winning Actor & Producer
+              {profile.subtitle}
             </span>
           </motion.div>
 
@@ -168,11 +220,11 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.3 }}
             className="flex flex-col gap-1 md:gap-2 select-none"
           >
-            <h1 className="font-cinzel text-5xl md:text-7xl lg:text-8xl font-medium tracking-[0.25em] leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500">
-              D I N U K A
+            <h1 className="font-cinzel text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-[0.2em] md:tracking-[0.25em] leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500 whitespace-nowrap">
+              {profile.firstName}
             </h1>
-            <h2 className="font-cinzel text-3xl md:text-5xl lg:text-6xl font-light tracking-[0.3em] leading-normal text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-white to-zinc-600 -mt-1 md:-mt-2">
-              SENANAYAKE
+            <h2 className="font-cinzel text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-[0.25em] md:tracking-[0.3em] leading-normal text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-white to-zinc-600 -mt-1 md:-mt-2 whitespace-nowrap">
+              {profile.lastName}
             </h2>
           </motion.div>
 
@@ -183,7 +235,7 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.4 }}
             className="text-xs md:text-sm font-light text-zinc-400 max-w-lg leading-relaxed tracking-wider"
           >
-            A masterclass in cinematic expression. Captivating audiences worldwide with nuanced performances, intense presence, and a commitment to storytelling that transcends screens.
+            {profile.description}
           </motion.p>
 
           {/* Luxury Buttons */}
@@ -215,26 +267,334 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          SIGNATURE WATERMARK & SCROLL INDICATOR
+          INTERACTIVE HEADSHOT GALLERY SECTION
           ========================================================================= */}
-      <footer className="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center z-10 gap-4 mt-auto">
-        <span className="text-[9px] tracking-[0.4em] uppercase text-zinc-600 font-light text-center md:text-left select-none">
-          An ÉCLAT Premium Experience
-        </span>
+      <section id="portfolio" className="w-full max-w-7xl mx-auto px-6 py-24 md:py-32 relative z-10">
         
-        {/* Animated Scroll Down Indicator */}
-        <div className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-          <span className="text-[8px] tracking-[0.3em] uppercase text-zinc-500 font-light">
-            Scroll to explore
+        {/* Section Header */}
+        <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col gap-3">
+            <motion.div
+              initial={{ opacity: 0, x: -15 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="flex items-center gap-3"
+            >
+              <span className="h-[1px] w-6 bg-zinc-600"></span>
+              <span className="text-[9px] md:text-[10px] tracking-[0.45em] text-zinc-500 font-light uppercase">
+                PORTFOLIO / CHARACTER STUDIES
+              </span>
+            </motion.div>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.1 }}
+              className="font-cinzel text-3xl md:text-5xl font-medium tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400"
+            >
+              HEADSHOTS
+            </motion.h2>
+          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="max-w-xs text-xs font-light text-zinc-500 leading-relaxed tracking-wider"
+          >
+            Exploring character duality and dramatic light. A series of fine-art portraits captured on medium format film.
+          </motion.p>
+        </div>
+
+        {/* Asymmetrical Portrait Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-start">
+          {profile.headshots.map((item) => (
+            <div
+              key={item.id}
+              className={`relative group ${item.offset}`}
+            >
+              {/* Ambient Neon Glow behind card */}
+              <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-purple-500/20 via-purple-600/10 to-blue-500/25 opacity-0 group-hover:opacity-100 blur-3xl transition-all duration-700 scale-90 group-hover:scale-110 pointer-events-none" />
+
+              {/* Main Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 45 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.8, delay: item.delay }}
+                whileHover="hover"
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/20 backdrop-blur-sm cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 w-full"
+                style={{ aspectRatio: item.aspect }}
+              >
+                {/* Zooming Image container */}
+                <motion.div
+                  variants={{
+                    hover: { scale: 1.05 }
+                  }}
+                  transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
+                  className="w-full h-full"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover filter grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:contrast-100"
+                  />
+                </motion.div>
+
+                {/* Gradient card shadow overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+
+                {/* Frosted glass text capsule - Elegant design */}
+                <motion.div
+                  variants={{
+                    initial: { y: 0 },
+                    hover: { y: -4 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#09090b]/80 backdrop-blur-xl border border-white/10 flex flex-col gap-1 shadow-2xl transition-all duration-300 group-hover:border-purple-500/30 group-hover:bg-[#09090b]/90"
+                >
+                  <span className="font-sans text-[10px] tracking-[0.3em] font-medium text-white/90 uppercase transition-colors duration-300 group-hover:text-purple-300">
+                    {item.title}
+                  </span>
+                  <span className="font-sans text-[8px] tracking-[0.2em] font-light text-zinc-500 uppercase transition-colors duration-300 group-hover:text-zinc-400">
+                    {item.subtitle}
+                  </span>
+                </motion.div>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          CINEMATIC FILMOGRAPHY GRID
+          ========================================================================= */}
+      <section id="filmography" className="w-full max-w-7xl mx-auto px-6 py-16 md:py-24 relative z-10">
+        
+        {/* Section Header */}
+        <div className="mb-10 flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <span className="h-[1px] w-6 bg-zinc-700"></span>
+            <span className="text-[10px] tracking-[0.3em] uppercase text-white/40 font-light">
+              FILMOGRAPHY / ARCHIVE
+            </span>
+          </div>
+          <h2 className="font-cinzel text-2xl md:text-4xl font-medium tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400 mt-1">
+            SELECTED WORKS
+          </h2>
+        </div>
+
+        {/* Netflix-style Horizontal Carousel */}
+        <div className="w-full overflow-x-auto pb-8 flex gap-6 md:gap-8 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {profile.films.map((film) => (
+            <motion.div
+              key={film.id}
+              className="snap-start shrink-0 first:pl-0"
+              whileHover={{ y: -10, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            >
+              <div className="relative aspect-[2/3] w-[260px] sm:w-[300px] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/20 backdrop-blur-sm cursor-pointer group shadow-2xl transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.1)]">
+                {/* Poster Image */}
+                <div className="w-full h-full overflow-hidden">
+                  <img
+                    src={film.image}
+                    alt={film.title}
+                    className="w-full h-full object-cover filter grayscale contrast-110 group-hover:scale-105 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700 ease-out"
+                  />
+                </div>
+
+                {/* Dark Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90 group-hover:opacity-85 transition-opacity duration-300 pointer-events-none" />
+
+                {/* Translucent Details Overlay at bottom */}
+                <div className="absolute bottom-0 inset-x-0 p-5 bg-[#09090b]/80 backdrop-blur-md border-t border-white/10 flex flex-col gap-1.5 transition-colors duration-300 group-hover:bg-[#09090b]/95 group-hover:border-purple-500/20">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="font-sans text-[11px] tracking-[0.25em] font-medium text-white/90 uppercase truncate">
+                      {film.title}
+                    </span>
+                    <span className="font-sans text-[9px] tracking-[0.1em] font-light text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/5 shrink-0">
+                      {film.year}
+                    </span>
+                  </div>
+                  
+                  <div className="h-[1px] w-full bg-white/5 my-1" />
+                  
+                  <div className="flex flex-col gap-0.5">
+                    <div className="flex justify-between text-[8px] tracking-[0.15em] uppercase text-zinc-500">
+                      <span>ROLE</span>
+                      <span className="text-zinc-300 font-light truncate max-w-[150px]">{film.role}</span>
+                    </div>
+                    <div className="flex justify-between text-[8px] tracking-[0.15em] uppercase text-zinc-500">
+                      <span>DIRECTOR</span>
+                      <span className="text-zinc-300 font-light truncate max-w-[150px]">{film.director}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* =========================================================================
+          VIP CONTACT & EPK DOWNLOAD SECTION
+          ========================================================================= */}
+      <section id="contact" className="w-full max-w-7xl mx-auto px-6 py-16 md:py-24 relative z-10 border-t border-white/5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+          
+          {/* Left Column: VIP Contact Form */}
+          <div className="flex flex-col gap-8 justify-between">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <span className="h-[1px] w-6 bg-zinc-700"></span>
+                <span className="text-[10px] tracking-[0.3em] uppercase text-white/40 font-light">
+                  VIP INQUIRIES
+                </span>
+              </div>
+              <h2 className="font-cinzel text-2xl md:text-4xl font-medium tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400 mt-1">
+                SECURE PORTAL
+              </h2>
+              <p className="text-xs text-zinc-500 font-light leading-relaxed tracking-wider max-w-md">
+                For casting directors, representation, and production inquiries, please submit a secured message below. A representative will respond within 24 hours.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6">
+              <div className="flex flex-col gap-1">
+                <label className="text-[9px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">NAME</label>
+                <input 
+                  type="text" 
+                  value={formState.name}
+                  onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                  placeholder="Your name" 
+                  required
+                  disabled={isSubmitting || submitted}
+                  className="w-full px-5 py-3.5 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-zinc-600 text-xs tracking-wider transition-all duration-300 focus:border-purple-500/50 focus:shadow-[0_0_15px_rgba(168,85,247,0.15)] focus:outline-none disabled:opacity-50"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[9px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">EMAIL ADDRESS</label>
+                <input 
+                  type="email" 
+                  value={formState.email}
+                  onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                  placeholder="your.email@domain.com" 
+                  required
+                  disabled={isSubmitting || submitted}
+                  className="w-full px-5 py-3.5 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-zinc-600 text-xs tracking-wider transition-all duration-300 focus:border-purple-500/50 focus:shadow-[0_0_15px_rgba(168,85,247,0.15)] focus:outline-none disabled:opacity-50"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-[9px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">MESSAGE</label>
+                <textarea 
+                  rows="4" 
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  placeholder="Specify project details, timeline, or casting requirements..." 
+                  required
+                  disabled={isSubmitting || submitted}
+                  className="w-full px-5 py-3.5 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-zinc-600 text-xs tracking-wider transition-all duration-300 focus:border-purple-500/50 focus:shadow-[0_0_15px_rgba(168,85,247,0.15)] focus:outline-none resize-none disabled:opacity-50"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                disabled={isSubmitting || submitted || !formState.name || !formState.email || !formState.message}
+                className="w-full py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-xl border border-white/10 hover:border-white/30 text-zinc-300 hover:text-white text-[10px] tracking-[0.25em] uppercase font-semibold transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <span className="animate-spin h-3 w-3 border-2 border-white/50 border-t-white rounded-full" />
+                    <span>SENDING...</span>
+                  </span>
+                ) : submitted ? (
+                  <span className="text-purple-400 font-bold">MESSAGE RECEIVED ✓</span>
+                ) : (
+                  <span>SEND MESSAGE</span>
+                )}
+              </button>
+            </form>
+          </div>
+
+          {/* Right Column: EPK Download Block */}
+          <div className="relative group flex flex-col justify-between p-8 md:p-12 rounded-3xl border border-white/10 bg-zinc-950/20 backdrop-blur-md overflow-hidden h-full">
+            {/* Subtle Pulsing Neon Ambient Glow behind the card */}
+            <motion.div
+              animate={{
+                opacity: [0.12, 0.28, 0.12],
+                scale: [0.95, 1.05, 0.95]
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute inset-0 -z-10 bg-gradient-to-tr from-purple-500/15 via-blue-500/5 to-transparent blur-3xl pointer-events-none"
+            />
+
+            <div className="flex flex-col gap-4">
+              <span className="text-[10px] tracking-[0.3em] uppercase text-purple-400 font-semibold">
+                PRESS & REPRESENTATION
+              </span>
+              <h3 className="font-cinzel text-xl md:text-3xl font-medium tracking-[0.15em] text-white">
+                ELECTRONIC PRESS KIT
+              </h3>
+              <div className="h-[1px] w-12 bg-purple-500/40 my-1" />
+              <p className="text-xs text-zinc-400 leading-relaxed font-light tracking-wide max-w-sm">
+                Access the complete industry packet, featuring high-resolution promotional stills, complete theatrical headshots, verified acting biography, and full production credits.
+              </p>
+            </div>
+
+            <div className="mt-12 relative">
+              {/* Shimmer line inside the button wrapping */}
+              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-purple-500/30 to-blue-500/30 opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
+              
+              <a 
+                href="/EPK_Dinuka_Senanayake_2026.pdf" 
+                download
+                className="relative w-full py-4.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-xl border border-white/10 hover:border-white/30 text-white text-[10px] tracking-[0.25em] uppercase font-semibold transition-all duration-500 hover:scale-[1.02] flex items-center justify-center gap-3 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.25)]"
+              >
+                <span>DOWNLOAD OFFICIAL EPK</span>
+                <span className="text-xs animate-bounce font-sans">↓</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          FOOTER SECTION
+          ========================================================================= */}
+      <footer className="w-full max-w-7xl mx-auto px-6 py-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center z-10 gap-6 mt-16">
+        <div className="flex flex-col gap-1.5 text-center md:text-left select-none">
+          <span className="text-[9px] tracking-[0.4em] uppercase text-zinc-500 font-medium">
+            An ÉCLAT Premium Experience
+          </span>
+          <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-600 font-light">
+            BY BLACK LEOPARD ENTERTAINMENT © {new Date().getFullYear()}
+          </span>
+        </div>
+        
+        {/* Animated Scroll Up Button */}
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-pointer focus:outline-none group/btn"
+        >
+          <span className="text-[8px] tracking-[0.3em] uppercase text-zinc-500 font-light group-hover/btn:text-white transition-colors duration-300">
+            Back to top
           </span>
           <div className="h-8 w-[1px] bg-gradient-to-b from-zinc-500 to-transparent relative overflow-hidden">
             <motion.div 
-              animate={{ y: [0, 32] }} 
+              animate={{ y: [0, -32] }} 
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
-              className="absolute top-0 left-0 w-full h-3 bg-white" 
+              className="absolute bottom-0 left-0 w-full h-3 bg-white" 
             />
           </div>
-        </div>
+        </button>
       </footer>
 
       {/* =========================================================================

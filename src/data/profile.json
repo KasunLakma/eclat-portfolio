@@ -1,0 +1,86 @@
+{
+  "firstName": "DINUKA",
+  "lastName": "SENANAYAKE",
+  "subtitle": "Award-Winning Actor & Producer",
+  "description": "A masterclass in cinematic expression. Captivating audiences worldwide with nuanced performances, intense presence, and a commitment to storytelling that transcends screens.",
+  "headshots": [
+    {
+      "id": 1,
+      "title": "THE PROTAGONIST",
+      "subtitle": "RAW PORTRAIT",
+      "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80",
+      "offset": "md:mt-0",
+      "aspect": "3/4",
+      "delay": 0.1
+    },
+    {
+      "id": 2,
+      "title": "NOIR SERIES",
+      "subtitle": "DRAMATIC PROFILE",
+      "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+      "offset": "md:mt-16",
+      "aspect": "3/4.6",
+      "delay": 0.2
+    },
+    {
+      "id": 3,
+      "title": "THE ANTAGONIST",
+      "subtitle": "SHADOW PLAY",
+      "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80",
+      "offset": "md:mt-6",
+      "aspect": "3/3.8",
+      "delay": 0.3
+    },
+    {
+      "id": 4,
+      "title": "ELEGANCE",
+      "subtitle": "CLASSIC SUIT",
+      "image": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=800&q=80",
+      "offset": "md:mt-24",
+      "aspect": "3/4.8",
+      "delay": 0.4
+    }
+  ],
+  "films": [
+    {
+      "id": 1,
+      "title": "THE SILENT GUEST",
+      "year": "2025",
+      "role": "Lead (Protagonist)",
+      "director": "Marcus Vance",
+      "image": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 2,
+      "title": "SHADOW VALLEYS",
+      "year": "2024",
+      "role": "Supporting (Kaelen)",
+      "director": "Denis Villeneuve",
+      "image": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 3,
+      "title": "MIDNIGHT RUNNER",
+      "year": "2023",
+      "role": "Lead (Dinuka)",
+      "director": "Nicolas Winding Refn",
+      "image": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 4,
+      "title": "COLD HORIZON",
+      "year": "2022",
+      "role": "Supporting (Agent Ross)",
+      "director": "Taylor Sheridan",
+      "image": "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 5,
+      "title": "CHRONICLES OF DUST",
+      "year": "2022",
+      "role": "Lead (The Wanderer)",
+      "director": "Christopher Nolan",
+      "image": "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+}
