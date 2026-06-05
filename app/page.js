@@ -453,16 +453,16 @@ export default function Home() {
           </h2>
         </div>
 
-        {/* Netflix-style Horizontal Carousel */}
-        <div className="w-full overflow-x-auto pb-8 flex gap-6 md:gap-8 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {/* Filmography Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
           {profile.films.map((film) => (
             <motion.div
               key={film.id}
-              className="snap-start shrink-0 first:pl-0"
+              className="w-full"
               whileHover={{ y: -10, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
             >
-              <div className="relative aspect-[2/3] w-[260px] sm:w-[300px] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/20 backdrop-blur-sm cursor-pointer group shadow-2xl transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.1)]">
+              <div className="relative w-full aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/20 backdrop-blur-sm cursor-pointer group shadow-2xl transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.1)]">
                 {/* Poster Image */}
                 <div className="w-full h-full overflow-hidden">
                   <img
