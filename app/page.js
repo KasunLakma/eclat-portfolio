@@ -4,7 +4,32 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Menu, ArrowUpRight, Volume2, VolumeX } from 'lucide-react';
 import profileData from '@/src/data/profile.json';
-import { getProfile } from './admin/actions';
+import { getProfile, submitInquiry } from './admin/actions';
+
+function getEmbedUrl(url) {
+  if (!url) return '';
+  if (url.includes('youtube.com/embed/') || url.includes('player.vimeo.com/video/')) {
+    return url;
+  }
+  if (url.includes('youtube.com/watch')) {
+    try {
+      const urlObj = new URL(url);
+      const v = urlObj.searchParams.get('v');
+      return `https://www.youtube.com/embed/${v}?autoplay=1`;
+    } catch (e) {
+      return url;
+    }
+  }
+  if (url.includes('youtu.be/')) {
+    const id = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${id}?autoplay=1`;
+  }
+  if (url.includes('vimeo.com/')) {
+    const id = url.split('vimeo.com/')[1]?.split('?')[0];
+    return `https://player.vimeo.com/video/${id}?autoplay=1`;
+  }
+  return url;
+}
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,16 +53,32 @@ export default function Home() {
     loadLatestProfile();
   }, []);
 
+  const [toastMessage, setToastMessage] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formState.name || !formState.email || !formState.message) return;
     setIsSubmitting(true);
-    // Simulate API request
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setSubmitted(true);
-    setFormState({ name: '', email: '', message: '' });
-    setTimeout(() => setSubmitted(false), 4000);
+
+    try {
+      const res = await submitInquiry(formState.name, formState.email, formState.message);
+      setIsSubmitting(false);
+      if (res.success) {
+        setSubmitted(true);
+        setToastMessage('Message Sent Successfully!');
+        setFormState({ name: '', email: '', message: '' });
+        setTimeout(() => {
+          setSubmitted(false);
+          setToastMessage(null);
+        }, 4000);
+      } else {
+        alert(res.error || 'Failed to send message.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An unexpected error occurred.');
+      setIsSubmitting(false);
+    }
   };
 
   // Focus trap / handle ESC key to close showreel modal
@@ -153,7 +194,7 @@ export default function Home() {
 
         {/* Navigation pill - Frosted Glass */}
         <nav className="hidden md:flex items-center gap-1.5 px-2 py-1.5 rounded-full bg-white/[0.02] backdrop-blur-xl border border-white/[0.08] shadow-2xl">
-          <a href="#home" className="text-[10px] tracking-[0.25em] font-light text-zinc-400 hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-white/[0.03]">HOME</a>
+          <a href="#" className="text-[10px] tracking-[0.25em] font-light text-zinc-400 hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-white/[0.03]">HOME</a>
           <a href="#portfolio" className="text-[10px] tracking-[0.25em] font-light text-zinc-400 hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-white/[0.03]">PORTFOLIO</a>
           <a href="#about" className="text-[10px] tracking-[0.25em] font-light text-zinc-400 hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-white/[0.03]">ABOUT</a>
           <a href="#contact" className="text-[10px] tracking-[0.25em] font-light text-zinc-400 hover:text-white px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-white/[0.03]">CONTACT</a>
@@ -185,7 +226,7 @@ export default function Home() {
             transition={{ duration: 0.3 }}
             className="absolute top-24 left-6 right-6 p-6 rounded-3xl bg-[#09090b]/95 backdrop-blur-2xl border border-white/10 z-40 md:hidden flex flex-col gap-4 shadow-3xl"
           >
-            <a href="#home" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">HOME</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">HOME</a>
             <a href="#portfolio" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">PORTFOLIO</a>
             <a href="#about" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">ABOUT</a>
             <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">CONTACT</a>
@@ -197,7 +238,7 @@ export default function Home() {
       {/* =========================================================================
           HERO CONTENT SECTION
           ========================================================================= */}
-      <section id="home" className="min-h-[85vh] md:min-h-[90vh] w-full max-w-7xl mx-auto px-6 flex flex-col justify-center relative z-10 py-12 md:py-24">
+      <section id="about" className="min-h-[85vh] md:min-h-[90vh] w-full max-w-7xl mx-auto px-6 flex flex-col justify-center relative z-10 py-12 md:py-24">
         <div className="max-w-2xl flex flex-col gap-6 md:gap-8 text-left">
           
           {/* Subtitle Indicator */}
@@ -237,6 +278,33 @@ export default function Home() {
           >
             {profile.description}
           </motion.p>
+
+          {/* Casting Stats Grid */}
+          {profile.stats && (
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.45 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md max-w-lg"
+            >
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Height</span>
+                <span className="text-xs text-zinc-300 font-medium tracking-wide">{profile.stats.height}</span>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Eyes</span>
+                <span className="text-xs text-zinc-300 font-medium tracking-wide">{profile.stats.eyes}</span>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Hair</span>
+                <span className="text-xs text-zinc-300 font-medium tracking-wide">{profile.stats.hair}</span>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Languages</span>
+                <span className="text-xs text-zinc-300 font-medium tracking-wide truncate" title={profile.stats.languages}>{profile.stats.languages}</span>
+              </div>
+            </motion.div>
+          )}
 
           {/* Luxury Buttons */}
           <motion.div
@@ -632,25 +700,51 @@ export default function Home() {
                 </button>
               </div>
 
-              {/* Video Element (Plays premium fashion/cinematic clip) */}
-              <video
-                ref={videoRef}
-                src="https://assets.mixkit.co/videos/preview/mixkit-fashion-woman-with-silver-glitter-makeup-40455-large.mp4"
-                autoPlay
-                loop
-                className="w-full h-full object-cover"
-              />
-
-              {/* Bottom Mute Control */}
-              <div className="absolute bottom-4 right-4 flex items-center gap-3 z-20">
-                <button
-                  onClick={() => setIsMuted(!isMuted)}
-                  className="p-3 rounded-full bg-black/40 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white transition-all cursor-pointer"
-                >
-                  {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                </button>
-              </div>
+              {/* Video Element or Embed */}
+              {profile.showreelUrl && (profile.showreelUrl.includes('youtube') || profile.showreelUrl.includes('youtu.be') || profile.showreelUrl.includes('vimeo')) ? (
+                <iframe
+                  src={getEmbedUrl(profile.showreelUrl)}
+                  className="w-full h-full border-none"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="Showreel"
+                />
+              ) : (
+                <>
+                  <video
+                    ref={videoRef}
+                    src="https://assets.mixkit.co/videos/preview/mixkit-fashion-woman-with-silver-glitter-makeup-40455-large.mp4"
+                    autoPlay
+                    loop
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Bottom Mute Control */}
+                  <div className="absolute bottom-4 right-4 flex items-center gap-3 z-20">
+                    <button
+                      onClick={() => setIsMuted(!isMuted)}
+                      className="p-3 rounded-full bg-black/40 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white transition-all cursor-pointer"
+                    >
+                      {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </>
+              )}
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 px-6 py-4 rounded-2xl bg-zinc-950/80 backdrop-blur-xl border border-purple-500/30 text-white shadow-2xl flex items-center gap-3"
+          >
+            <div className="h-2 w-2 rounded-full bg-purple-500 animate-ping" />
+            <span className="text-[10px] tracking-[0.2em] font-medium uppercase">{toastMessage}</span>
           </motion.div>
         )}
       </AnimatePresence>

@@ -168,3 +168,49 @@ export async function uploadImage(formData) {
     return { success: false, error: error.message || 'Failed to upload image.' };
   }
 }
+
+export async function submitInquiry(name, email, message) {
+  try {
+    if (!name || !email || !message) {
+      return { success: false, error: 'All fields are required.' };
+    }
+
+    const inquiry = await prisma.inquiry.create({
+      data: {
+        name,
+        email,
+        message,
+      },
+    });
+
+    return { success: true, inquiry };
+  } catch (error) {
+    console.error('Error submitting inquiry:', error);
+    return { success: false, error: 'Internal server error occurred while saving inquiry.' };
+  }
+}
+
+export async function getInquiries(userId) {
+  try {
+    if (!userId) {
+      return { success: false, error: 'Unauthorized.' };
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'MANAGER')) {
+      return { success: false, error: 'Unauthorized: Only admin or managers can view inquiries.' };
+    }
+
+    const inquiries = await prisma.inquiry.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return { success: true, inquiries };
+  } catch (error) {
+    console.error('Error fetching inquiries:', error);
+    return { success: false, error: 'Failed to retrieve inquiries.' };
+  }
+}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getProfile, saveProfile, loginUser, updateAdminCredentials, uploadImage } from './actions';
+import { getProfile, saveProfile, loginUser, updateAdminCredentials, uploadImage, getInquiries } from './actions';
 import { Save, ArrowLeft, CheckCircle, Loader2, ShieldAlert, Upload, Image as ImageIcon } from 'lucide-react';
 
 export default function AdminPage() {
@@ -20,6 +20,8 @@ export default function AdminPage() {
   const [uploadingIndex, setUploadingIndex] = useState(null);
   const [uploadingFilmIndex, setUploadingFilmIndex] = useState(null);
   const [uploadingHero, setUploadingHero] = useState(false);
+  const [inquiries, setInquiries] = useState([]);
+  const [loadingInquiries, setLoadingInquiries] = useState(false);
 
   // Account Settings States
   const [newEmail, setNewEmail] = useState('');
@@ -40,6 +42,21 @@ export default function AdminPage() {
     }
     loadData();
   }, []);
+
+  // Fetch inquiries when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      async function loadInquiries() {
+        setLoadingInquiries(true);
+        const res = await getInquiries(currentUser.id);
+        if (res.success) {
+          setInquiries(res.inquiries);
+        }
+        setLoadingInquiries(false);
+      }
+      loadInquiries();
+    }
+  }, [isAuthenticated, currentUser]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -85,6 +102,13 @@ export default function AdminPage() {
   // Helper functions to handle changes
   const handleGeneralChange = (key, value) => {
     setData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleStatChange = (key, value) => {
+    setData((prev) => ({
+      ...prev,
+      stats: prev.stats ? { ...prev.stats, [key]: value } : { [key]: value }
+    }));
   };
 
   const handleHeadshotChange = (index, key, value) => {
@@ -434,6 +458,65 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
+
+            <div className="flex flex-col gap-1 md:col-span-2">
+              <label className="text-[9px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">SHOWREEL VIDEO URL (YOUTUBE / VIMEO)</label>
+              <input 
+                type="url" 
+                value={data.showreelUrl || ''}
+                onChange={(e) => handleGeneralChange('showreelUrl', e.target.value)}
+                disabled={isReadOnly('hero')}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="w-full px-4 py-3 rounded-xl bg-white/[0.02] border border-white/10 text-white placeholder-zinc-700 text-xs tracking-wider transition-all focus:border-purple-500/50 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:col-span-2 mt-2">
+              <div className="flex flex-col gap-1">
+                <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">HEIGHT</label>
+                <input 
+                  type="text" 
+                  value={data.stats?.height || ''}
+                  onChange={(e) => handleStatChange('height', e.target.value)}
+                  disabled={isReadOnly('hero')}
+                  placeholder="e.g. 6'1"
+                  className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">EYES</label>
+                <input 
+                  type="text" 
+                  value={data.stats?.eyes || ''}
+                  onChange={(e) => handleStatChange('eyes', e.target.value)}
+                  disabled={isReadOnly('hero')}
+                  placeholder="e.g. Dark Brown"
+                  className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">HAIR</label>
+                <input 
+                  type="text" 
+                  value={data.stats?.hair || ''}
+                  onChange={(e) => handleStatChange('hair', e.target.value)}
+                  disabled={isReadOnly('hero')}
+                  placeholder="e.g. Black"
+                  className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">LANGUAGES</label>
+                <input 
+                  type="text" 
+                  value={data.stats?.languages || ''}
+                  onChange={(e) => handleStatChange('languages', e.target.value)}
+                  disabled={isReadOnly('hero')}
+                  placeholder="e.g. English, Sinhalese"
+                  className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+            </div>
           </div>
         </section>
 
@@ -755,6 +838,53 @@ export default function AdminPage() {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* VIP Inquiries Section - Admin & Manager Only */}
+      {isAuthenticated && (currentUser?.role === 'ADMIN' || currentUser?.role === 'MANAGER') && (
+        <div className="w-full max-w-5xl mx-auto px-6 pb-12">
+          <section className="flex flex-col gap-6 p-6 md:p-8 rounded-2xl border border-white/10 bg-zinc-950/20 backdrop-blur-sm shadow-xl">
+            <div className="flex items-center gap-3">
+              <span className="h-[1px] w-6 bg-purple-500/50"></span>
+              <span className="text-[10px] tracking-[0.3em] uppercase text-zinc-400 font-medium">VIP INQUIRIES & CASTING CALLS</span>
+            </div>
+            
+            {loadingInquiries ? (
+              <div className="flex justify-center items-center py-12 gap-2 text-zinc-500 text-xs">
+                <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
+                <span>RETRIEVING SECURE MESSAGES...</span>
+              </div>
+            ) : inquiries.length === 0 ? (
+              <div className="text-center py-12 border border-dashed border-white/5 rounded-xl bg-white/[0.01]">
+                <span className="text-[10px] tracking-widest uppercase text-zinc-500 font-light">No inquiries received yet.</span>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {inquiries.map((inq) => (
+                  <div key={inq.id} className="p-5 rounded-xl border border-white/5 bg-white/[0.01] flex flex-col gap-3 relative">
+                    <div className="flex justify-between items-start gap-4 flex-wrap">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-xs text-white font-medium">{inq.name}</span>
+                        <a href={`mailto:${inq.email}`} className="text-[10px] text-purple-400 hover:text-purple-300 transition-colors font-light tracking-wide">{inq.email}</a>
+                      </div>
+                      <span className="text-[9px] text-zinc-500 tracking-wide font-light">
+                        {new Date(inq.createdAt).toLocaleString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <div className="h-[1px] w-full bg-white/5" />
+                    <p className="text-[11px] text-zinc-400 font-light leading-relaxed whitespace-pre-wrap">{inq.message}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
       )}
 
