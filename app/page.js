@@ -123,7 +123,7 @@ export default function Home() {
       <div className="absolute top-0 right-0 w-full md:w-[60%] h-[100vh] pointer-events-none z-0 overflow-hidden">
         <div 
           className="w-full h-full bg-cover bg-right md:bg-center bg-no-repeat opacity-15 md:opacity-25 transition-opacity duration-1000"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1920&q=80')" }}
+          style={{ backgroundImage: `url('${profile.heroImage || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1920&q=80"}')` }}
         />
         {/* Left radial fade for desktop readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-[#060608]/75 to-transparent hidden md:block" />

@@ -18,6 +18,8 @@ export default function AdminPage() {
   const [isExiting, setIsExiting] = useState(false);
   const [authenticating, setAuthenticating] = useState(false);
   const [uploadingIndex, setUploadingIndex] = useState(null);
+  const [uploadingFilmIndex, setUploadingFilmIndex] = useState(null);
+  const [uploadingHero, setUploadingHero] = useState(false);
 
   // Account Settings States
   const [newEmail, setNewEmail] = useState('');
@@ -120,6 +122,50 @@ export default function AdminPage() {
       alert('An error occurred during file upload.');
     } finally {
       setUploadingIndex(null);
+    }
+  };
+
+  const handleFilmUpload = async (index, file) => {
+    if (!file) return;
+
+    setUploadingFilmIndex(index);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await uploadImage(formData);
+      if (res.success) {
+        handleFilmChange(index, 'image', res.url);
+      } else {
+        alert(res.error || 'Failed to upload image.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred during file upload.');
+    } finally {
+      setUploadingFilmIndex(null);
+    }
+  };
+
+  const handleHeroImageUpload = async (file) => {
+    if (!file) return;
+
+    setUploadingHero(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await uploadImage(formData);
+      if (res.success) {
+        handleGeneralChange('heroImage', res.url);
+      } else {
+        alert(res.error || 'Failed to upload image.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred during file upload.');
+    } finally {
+      setUploadingHero(false);
     }
   };
 
@@ -344,6 +390,50 @@ export default function AdminPage() {
                 required
               />
             </div>
+
+            <div className="flex flex-col gap-2 md:col-span-2">
+              <label className="text-[9px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">HERO BACKGROUND IMAGE</label>
+              
+              <div className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.01]">
+                {/* Thumbnail preview */}
+                <div className="relative w-24 h-16 rounded-lg overflow-hidden bg-zinc-900 border border-white/10 flex-shrink-0 flex items-center justify-center">
+                  {data.heroImage ? (
+                    <img 
+                      src={data.heroImage} 
+                      alt="Hero Background Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <ImageIcon className="w-5 h-5 text-zinc-700" />
+                  )}
+                  
+                  {uploadingHero && (
+                    <div className="absolute inset-0 bg-[#060608]/75 flex items-center justify-center">
+                      <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Upload button wrapper */}
+                <div className="flex flex-col gap-1.5 flex-grow">
+                  <span className="text-[9px] text-zinc-500 tracking-wide font-light truncate max-w-md">
+                    {data.heroImage ? data.heroImage.split('/').pop() : 'No file uploaded'}
+                  </span>
+                  
+                  <label className={`group/btn px-4 py-2.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 text-white text-[9px] tracking-wider uppercase font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer max-w-xs ${isReadOnly('hero') ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}`}>
+                    <Upload className="w-3.5 h-3.5 text-zinc-400 group-hover/btn:text-white transition-colors" />
+                    <span>Upload Hero Background</span>
+                    <input 
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleHeroImageUpload(e.target.files[0])}
+                      disabled={isReadOnly('hero')}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -542,16 +632,48 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">UNSPLASH POSTER IMAGE URL</label>
-                  <input 
-                    type="url" 
-                    value={film.image}
-                    onChange={(e) => handleFilmChange(index, 'image', e.target.value)}
-                    disabled={isReadOnly('films')}
-                    className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[10px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
-                    required
-                  />
+                <div className="flex flex-col gap-2">
+                  <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">FILM POSTER IMAGE</label>
+                  
+                  <div className="flex items-center gap-4 p-3 rounded-xl border border-white/5 bg-white/[0.01]">
+                    {/* Thumbnail preview */}
+                    <div className="relative w-16 h-24 rounded-lg overflow-hidden bg-zinc-900 border border-white/10 flex-shrink-0 flex items-center justify-center">
+                      {film.image ? (
+                        <img 
+                          src={film.image} 
+                          alt={film.title || "Preview"} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="w-5 h-5 text-zinc-700" />
+                      )}
+                      
+                      {uploadingFilmIndex === index && (
+                        <div className="absolute inset-0 bg-[#060608]/75 flex items-center justify-center">
+                          <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Upload button wrapper */}
+                    <div className="flex flex-col gap-1.5 flex-grow">
+                      <span className="text-[9px] text-zinc-500 tracking-wide font-light truncate max-w-[180px]">
+                        {film.image ? film.image.split('/').pop() : 'No file uploaded'}
+                      </span>
+                      
+                      <label className={`group/btn px-4 py-2.5 rounded-lg bg-white/[0.02] hover:bg-white/[0.06] border border-white/10 hover:border-white/20 text-white text-[9px] tracking-wider uppercase font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer ${isReadOnly('films') ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}`}>
+                        <Upload className="w-3.5 h-3.5 text-zinc-400 group-hover/btn:text-white transition-colors" />
+                        <span>Upload Poster Image</span>
+                        <input 
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleFilmUpload(index, e.target.files[0])}
+                          disabled={isReadOnly('films')}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
