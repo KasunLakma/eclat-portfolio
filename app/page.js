@@ -163,32 +163,25 @@ export default function Home() {
       {/* Cinematic Portrait Backdrop - Confined to Hero Viewport Height */}
       <div className="absolute top-0 right-0 w-full md:w-[60%] h-[100vh] pointer-events-none z-0 overflow-hidden">
         <div 
-          className="w-full h-full bg-cover bg-right md:bg-center bg-no-repeat opacity-15 md:opacity-25 transition-opacity duration-1000"
+          className="w-full h-full bg-cover bg-right md:bg-center bg-no-repeat opacity-30 md:opacity-50 transition-opacity duration-1000"
           style={{ backgroundImage: `url('${profile.heroImage || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1920&q=80"}')` }}
         />
         {/* Left radial fade for desktop readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-[#060608]/75 to-transparent hidden md:block" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-[#060608]/45 to-transparent hidden md:block" />
         {/* Central overlay for mobile readability */}
-        <div className="absolute inset-0 bg-[#060608]/60 md:hidden" />
+        <div className="absolute inset-0 bg-[#060608]/30 md:hidden" />
         {/* Top/Bottom ambient fade */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060608] via-transparent to-[#060608]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060608] via-transparent to-[#060608]/20" />
       </div>
 
       {/* =========================================================================
           HEADER SECTION
           ========================================================================= */}
       <header className="z-30 w-full px-6 py-6 md:py-8 max-w-7xl mx-auto flex justify-between items-center relative">
-        {/* Brand Logo & Subtext */}
+        {/* Brand Logo */}
         <div className="flex flex-col items-start select-none max-w-max">
-          <div className="w-full flex justify-between font-cinzel text-lg md:text-xl font-semibold text-white leading-none">
-            <span>É</span>
-            <span>C</span>
-            <span>L</span>
-            <span>A</span>
-            <span>T</span>
-          </div>
-          <span className="font-sans text-[9px] md:text-[10px] tracking-[0.15em] uppercase text-white/40 mt-3 font-light whitespace-nowrap block text-left border-t border-white/5 pt-2 w-full">
-            BY BLACK LEOPARD ENTERTAINMENT
+          <span className="font-serif text-xl md:text-2xl font-medium tracking-[0.35em] text-white uppercase leading-none">
+            ÉCLAT
           </span>
         </div>
 
@@ -241,18 +234,7 @@ export default function Home() {
       <section id="about" className="min-h-[85vh] md:min-h-[90vh] w-full max-w-7xl mx-auto px-6 flex flex-col justify-center relative z-10 py-12 md:py-24">
         <div className="max-w-2xl flex flex-col gap-6 md:gap-8 text-left">
           
-          {/* Subtitle Indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex items-center gap-3"
-          >
-            <span className="h-[1px] w-6 bg-zinc-600"></span>
-            <span className="text-[9px] md:text-[10px] tracking-[0.45em] text-zinc-400 font-light uppercase">
-              {profile.subtitle}
-            </span>
-          </motion.div>
+
 
           {/* Main Actor Name Layout - Metallic Text Clip */}
           <motion.div
