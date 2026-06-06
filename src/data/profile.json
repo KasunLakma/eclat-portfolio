@@ -13,6 +13,12 @@
     "languages": "Sinhala, English",
     "specialSkills": "Martial Arts, Swimming, Horse Riding, Driving"
   },
+  "socials": {
+    "instagram": "https://instagram.com/dinuka_s",
+    "imdb": "https://imdb.com",
+    "youtube": "https://youtube.com",
+    "agency": "https://linkedin.com"
+  },
   "headshots": [
     {
       "id": 1,

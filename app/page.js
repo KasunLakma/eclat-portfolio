@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Menu, ArrowUpRight, Volume2, VolumeX } from 'lucide-react';
+import { X, Menu, ArrowUpRight, Volume2, VolumeX, Film, Link as LinkIcon } from 'lucide-react';
 import profileData from '@/src/data/profile.json';
 import { getProfile, submitInquiry } from './admin/actions';
 
@@ -489,11 +489,14 @@ export default function Home() {
       {/* =========================================================================
           VIP CONTACT & EPK DOWNLOAD SECTION
           ========================================================================= */}
-      <section id="contact" className="w-full max-w-7xl mx-auto px-6 py-16 md:py-24 relative z-10 border-t border-white/5">
+      {/* =========================================================================
+          VIP CONTACT & SOCIALS GRID SECTION
+          ========================================================================= */}
+      <section id="contact" className="w-full max-w-6xl mx-auto px-6 py-16 md:py-24 relative z-10 border-t border-white/5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
           
           {/* Left Column: VIP Contact Form */}
-          <div className="flex flex-col gap-8 justify-between">
+          <div className="flex flex-col gap-8 justify-between w-full">
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3">
                 <span className="h-[1px] w-6 bg-zinc-700"></span>
@@ -568,47 +571,124 @@ export default function Home() {
             </form>
           </div>
 
-          {/* Right Column: EPK Download Block */}
-          <div className="relative group flex flex-col justify-between p-8 md:p-12 rounded-3xl border border-white/10 bg-zinc-950/20 backdrop-blur-md overflow-hidden h-full">
-            {/* Subtle Pulsing Neon Ambient Glow behind the card */}
-            <motion.div
-              animate={{
-                opacity: [0.12, 0.28, 0.12],
-                scale: [0.95, 1.05, 0.95]
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="absolute inset-0 -z-10 bg-gradient-to-tr from-purple-500/15 via-blue-500/5 to-transparent blur-3xl pointer-events-none"
-            />
-
-            <div className="flex flex-col gap-4">
-              <span className="text-[10px] tracking-[0.3em] uppercase text-purple-400 font-semibold">
-                PRESS & REPRESENTATION
-              </span>
-              <h3 className="font-cinzel text-xl md:text-3xl font-medium tracking-[0.15em] text-white">
-                ELECTRONIC PRESS KIT
-              </h3>
-              <div className="h-[1px] w-12 bg-purple-500/40 my-1" />
-              <p className="text-xs text-zinc-400 leading-relaxed font-light tracking-wide max-w-sm">
-                Access the complete industry packet, featuring high-resolution promotional stills, complete theatrical headshots, verified acting biography, and full production credits.
+          {/* Right Column: Premium Minimalist Social Links Grid */}
+          <div className="flex flex-col justify-between p-8 md:p-10 rounded-3xl border border-white/10 bg-zinc-950/20 backdrop-blur-md h-full">
+            <div className="flex flex-col gap-3 mb-8">
+              <div className="flex items-center gap-3">
+                <span className="h-[1px] w-6 bg-zinc-700"></span>
+                <span className="text-[10px] tracking-[0.3em] uppercase text-purple-400 font-semibold">
+                  CONNECT
+                </span>
+              </div>
+              <h2 className="font-cinzel text-2xl md:text-3xl font-medium tracking-[0.2em] text-white mt-1">
+                DIGITAL TOUCHPOINTS
+              </h2>
+              <p className="text-xs text-zinc-500 font-light leading-relaxed tracking-wider max-w-sm">
+                Explore official databases, social platforms, and talent representation profiles.
               </p>
             </div>
 
-            <div className="mt-12 relative">
-              {/* Shimmer line inside the button wrapping */}
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-purple-500/30 to-blue-500/30 opacity-30 blur-md group-hover:opacity-60 transition-opacity duration-700 pointer-events-none" />
-              
-              <a 
-                href="/EPK_Dinuka_Senanayake_2026.pdf" 
-                download
-                className="relative w-full py-4.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-xl border border-white/10 hover:border-white/30 text-white text-[10px] tracking-[0.25em] uppercase font-semibold transition-all duration-500 hover:scale-[1.02] flex items-center justify-center gap-3 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(168,85,247,0.25)]"
-              >
-                <span>DOWNLOAD OFFICIAL EPK</span>
-                <span className="text-xs animate-bounce font-sans">↓</span>
-              </a>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-grow">
+              {/* Instagram Card */}
+              {profile.socials?.instagram && (
+                <a
+                  href={profile.socials.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                >
+                  <div className="flex justify-between items-start">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-5 h-5 text-zinc-500 group-hover:text-purple-400 transition-colors"
+                    >
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                    </svg>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 mt-8">
+                    <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Instagram</span>
+                    <span className="text-xs text-zinc-300 font-medium tracking-wide font-sans">@dinuka_s</span>
+                  </div>
+                </a>
+              )}
+
+              {/* IMDb Card */}
+              {profile.socials?.imdb && (
+                <a
+                  href={profile.socials.imdb}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                >
+                  <div className="flex justify-between items-start">
+                    <Film className="w-5 h-5 text-zinc-500 group-hover:text-purple-400 transition-colors" />
+                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 mt-8">
+                    <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">IMDb</span>
+                    <span className="text-xs text-zinc-300 font-medium tracking-wide font-sans">Official Profile</span>
+                  </div>
+                </a>
+              )}
+
+              {/* YouTube Card */}
+              {profile.socials?.youtube && (
+                <a
+                  href={profile.socials.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                >
+                  <div className="flex justify-between items-start">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-5 h-5 text-zinc-500 group-hover:text-purple-400 transition-colors"
+                    >
+                      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z" />
+                      <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
+                    </svg>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 mt-8">
+                    <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">YouTube</span>
+                    <span className="text-xs text-zinc-300 font-medium tracking-wide font-sans">Official Channel</span>
+                  </div>
+                </a>
+              )}
+
+              {/* LinkedIn / Agency Card */}
+              {profile.socials?.agency && (
+                <a
+                  href={profile.socials.agency}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                >
+                  <div className="flex justify-between items-start">
+                    <LinkIcon className="w-5 h-5 text-zinc-500 group-hover:text-purple-400 transition-colors" />
+                    <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-white transition-colors opacity-0 group-hover:opacity-100" />
+                  </div>
+                  <div className="flex flex-col gap-0.5 mt-8">
+                    <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">LinkedIn / Agency</span>
+                    <span className="text-xs text-zinc-300 font-medium tracking-wide font-sans">Talent Representation</span>
+                  </div>
+                </a>
+              )}
             </div>
           </div>
 
@@ -621,10 +701,10 @@ export default function Home() {
       <footer className="w-full max-w-7xl mx-auto px-6 py-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center z-10 gap-6 mt-16">
         <div className="flex flex-col gap-1.5 text-center md:text-left select-none">
           <span className="text-[9px] tracking-[0.4em] uppercase text-zinc-500 font-medium">
-            An ÉCLAT Premium Experience
+            AN ÉCLAT PREMIUM EXPERIENCE
           </span>
           <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-600 font-light">
-            BY BLACK LEOPARD ENTERTAINMENT © {new Date().getFullYear()}
+            © {new Date().getFullYear()}
           </span>
         </div>
         
