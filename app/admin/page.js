@@ -471,7 +471,7 @@ export default function AdminPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:col-span-2 mt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 md:col-span-2 mt-2">
               <div className="flex flex-col gap-1">
                 <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">HEIGHT</label>
                 <input 
@@ -480,6 +480,17 @@ export default function AdminPage() {
                   onChange={(e) => handleStatChange('height', e.target.value)}
                   disabled={isReadOnly('hero')}
                   placeholder="e.g. 6'1"
+                  className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">BUILD</label>
+                <input 
+                  type="text" 
+                  value={data.stats?.build || ''}
+                  onChange={(e) => handleStatChange('build', e.target.value)}
+                  disabled={isReadOnly('hero')}
+                  placeholder="e.g. Athletic / Lean"
                   className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
                 />
               </div>
@@ -513,6 +524,17 @@ export default function AdminPage() {
                   onChange={(e) => handleStatChange('languages', e.target.value)}
                   disabled={isReadOnly('hero')}
                   placeholder="e.g. English, Sinhalese"
+                  className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">SPECIAL SKILLS</label>
+                <input 
+                  type="text" 
+                  value={data.stats?.specialSkills || ''}
+                  onChange={(e) => handleStatChange('specialSkills', e.target.value)}
+                  disabled={isReadOnly('hero')}
+                  placeholder="e.g. Swimming, Driving"
                   className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/10 text-white text-[11px] tracking-wide focus:border-purple-500/30 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
                 />
               </div>

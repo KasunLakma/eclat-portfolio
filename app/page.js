@@ -285,23 +285,31 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.45 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-md max-w-lg"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5 p-6 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl max-w-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
             >
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Height</span>
-                <span className="text-xs text-zinc-300 font-medium tracking-wide">{profile.stats.height}</span>
+              <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
+                <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Height</span>
+                <span className="text-xs text-zinc-200 font-medium tracking-wide">{profile.stats.height}</span>
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Eyes</span>
-                <span className="text-xs text-zinc-300 font-medium tracking-wide">{profile.stats.eyes}</span>
+              <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
+                <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Build</span>
+                <span className="text-xs text-zinc-200 font-medium tracking-wide">{profile.stats.build}</span>
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Hair</span>
-                <span className="text-xs text-zinc-300 font-medium tracking-wide">{profile.stats.hair}</span>
+              <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
+                <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Eyes</span>
+                <span className="text-xs text-zinc-200 font-medium tracking-wide">{profile.stats.eyes}</span>
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[8px] tracking-[0.2em] uppercase text-zinc-500 font-light">Languages</span>
-                <span className="text-xs text-zinc-300 font-medium tracking-wide truncate" title={profile.stats.languages}>{profile.stats.languages}</span>
+              <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
+                <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Hair</span>
+                <span className="text-xs text-zinc-200 font-medium tracking-wide">{profile.stats.hair}</span>
+              </div>
+              <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
+                <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Languages</span>
+                <span className="text-xs text-zinc-200 font-medium tracking-wide truncate" title={profile.stats.languages}>{profile.stats.languages}</span>
+              </div>
+              <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
+                <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Special Skills</span>
+                <span className="text-xs text-zinc-200 font-medium tracking-wide truncate" title={profile.stats.specialSkills}>{profile.stats.specialSkills}</span>
               </div>
             </motion.div>
           )}
