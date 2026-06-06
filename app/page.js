@@ -314,7 +314,8 @@ export default function Home() {
 
             {/* Download Press Kit - Thin Frosted Outline */}
             <a
-              href="#press-kit"
+              href="/press-kit.pdf"
+              download
               className="px-8 py-4 rounded-full bg-transparent border border-white/5 hover:border-white/20 text-zinc-400 hover:text-white text-[10px] tracking-[0.25em] uppercase font-light transition-all duration-500 hover:scale-103 hover:bg-white/[0.01] flex items-center justify-center gap-2"
             >
               <span>DOWNLOAD PRESS KIT</span>

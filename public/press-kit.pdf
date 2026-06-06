@@ -1,0 +1,5 @@
+This is a placeholder for the ÉCLAT Press Kit.
+To replace this with the actual Press Kit PDF document:
+1. Generate your professional EPK / Press Kit in PDF format.
+2. Save or export it as "press-kit.pdf".
+3. Overwrite this file at "public/press-kit.pdf" in the root of the project.
