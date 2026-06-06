@@ -869,7 +869,7 @@ export default function AdminPage() {
           <section className="flex flex-col gap-6 p-6 md:p-8 rounded-2xl border border-white/10 bg-zinc-950/20 backdrop-blur-sm shadow-xl">
             <div className="flex items-center gap-3">
               <span className="h-[1px] w-6 bg-purple-500/50"></span>
-              <span className="text-[10px] tracking-[0.3em] uppercase text-zinc-400 font-medium">VIP INQUIRIES & CASTING CALLS</span>
+              <span className="text-[10px] tracking-[0.3em] uppercase text-zinc-400 font-medium">RECEIVED VIP INQUIRIES</span>
             </div>
             
             {loadingInquiries ? (

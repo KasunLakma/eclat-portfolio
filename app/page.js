@@ -301,7 +301,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 mt-2"
+            className="flex mt-2"
           >
             {/* Play Showreel - Frosted Glass, Ambient Hover Glow */}
             <button
@@ -311,16 +311,6 @@ export default function Home() {
               <span>PLAY SHOWREEL</span>
               <span className="text-xs group-hover:translate-x-0.5 transition-transform duration-300">🎬</span>
             </button>
-
-            {/* Download Press Kit - Thin Frosted Outline */}
-            <a
-              href="/press-kit.pdf"
-              download
-              className="px-8 py-4 rounded-full bg-transparent border border-white/5 hover:border-white/20 text-zinc-400 hover:text-white text-[10px] tracking-[0.25em] uppercase font-light transition-all duration-500 hover:scale-103 hover:bg-white/[0.01] flex items-center justify-center gap-2"
-            >
-              <span>DOWNLOAD PRESS KIT</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60 hover:opacity-100 transition-opacity" />
-            </a>
           </motion.div>
         </div>
       </section>
