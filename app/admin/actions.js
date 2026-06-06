@@ -69,17 +69,28 @@ export async function loginUser(email, password) {
     }
 
     // Auto-seed on first authentication check if DB is empty
-    await seedDatabaseIfNeeded();
+    try {
+      await seedDatabaseIfNeeded();
+    } catch (seedErr) {
+      console.warn('Skipping auto-seed in loginUser:', seedErr.message);
+    }
 
     const user = await prisma.user.findUnique({
       where: { email: email.toLowerCase().trim() }
     });
 
-    if (!user) {
+    if (!user || !user.password) {
       return { success: false, error: 'Invalid email or password.' };
     }
 
-    const isValid = verifyPassword(password, user.password);
+    let isValid = false;
+    try {
+      isValid = verifyPassword(password, user.password);
+    } catch (passErr) {
+      console.error('Password validation error:', passErr);
+      return { success: false, error: 'Authentication processing failed.' };
+    }
+
     if (!isValid) {
       return { success: false, error: 'Invalid email or password.' };
     }
@@ -95,7 +106,7 @@ export async function loginUser(email, password) {
     };
   } catch (error) {
     console.error('Error logging in user:', error);
-    return { success: false, error: 'Internal server error occurred.' };
+    return { success: false, error: 'Internal server error: ' + (error.message || error) };
   }
 }
 
