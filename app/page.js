@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Menu, ArrowUpRight, Volume2, VolumeX, Film, Link as LinkIcon } from 'lucide-react';
+import Image from 'next/image';
 import profileData from '@/src/data/profile.json';
 import { getProfile, submitInquiry } from './admin/actions';
 
@@ -127,7 +128,7 @@ export default function Home() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-900/10 blur-[140px] pointer-events-none mix-blend-screen z-0"
+        className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-purple-900/10 blur-[140px] pointer-events-none mix-blend-screen z-0 transform-gpu"
       />
 
       {/* Top Deep Blue Glow Spot - Animated Smoothly */}
@@ -143,7 +144,7 @@ export default function Home() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[20%] right-[-10%] w-[700px] h-[700px] rounded-full bg-blue-950/15 blur-[150px] pointer-events-none mix-blend-screen z-0"
+        className="absolute top-[20%] right-[-10%] w-[700px] h-[700px] rounded-full bg-blue-950/15 blur-[150px] pointer-events-none mix-blend-screen z-0 transform-gpu"
       />
 
       {/* Gallery Section Ambient Glow (Scroll Transition Support) */}
@@ -157,14 +158,19 @@ export default function Home() {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[110vh] left-[-20%] w-[800px] h-[800px] rounded-full bg-purple-950/10 blur-[160px] pointer-events-none mix-blend-screen z-0"
+        className="absolute top-[110vh] left-[-20%] w-[800px] h-[800px] rounded-full bg-purple-950/10 blur-[160px] pointer-events-none mix-blend-screen z-0 transform-gpu"
       />
 
       {/* Cinematic Portrait Backdrop - Confined to Hero Viewport Height */}
-      <div className="absolute top-0 right-0 w-full md:w-[60%] h-[100vh] pointer-events-none z-0 overflow-hidden">
-        <div 
-          className="w-full h-full bg-cover bg-right md:bg-center bg-no-repeat opacity-30 md:opacity-50 transition-opacity duration-1000"
-          style={{ backgroundImage: `url('${profile.heroImage || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1920&q=80"}')` }}
+      <div className="absolute top-0 right-0 w-full md:w-[60%] h-[100vh] pointer-events-none z-0 overflow-hidden transform-gpu">
+        <Image
+          src={profile.heroImage || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1920&q=80"}
+          alt={`${profile.firstName || ''} ${profile.lastName || ''} Portrait`}
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 60vw"
+          quality={75}
+          className="object-cover object-right md:object-center opacity-30 md:opacity-50 transition-opacity duration-1000"
         />
         {/* Left radial fade for desktop readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-[#060608]/45 to-transparent hidden md:block" />
@@ -203,7 +209,7 @@ export default function Home() {
         {/* Mobile menu trigger */}
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-full border border-white/10 bg-white/[0.02] backdrop-blur-md text-white hover:bg-white/5 transition-all cursor-pointer"
+          className="md:hidden p-2 rounded-full border border-white/10 bg-zinc-900 md:bg-white/[0.02] md:backdrop-blur-md text-white hover:bg-white/5 transition-all cursor-pointer transform-gpu"
         >
           {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
         </button>
@@ -217,7 +223,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-24 left-6 right-6 p-6 rounded-3xl bg-[#09090b]/95 backdrop-blur-2xl border border-white/10 z-40 md:hidden flex flex-col gap-4 shadow-3xl"
+            className="absolute top-24 left-6 right-6 p-6 rounded-3xl bg-[#09090b]/95 border border-white/10 z-40 md:hidden flex flex-col gap-4 shadow-3xl transform-gpu"
           >
             <a href="#" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">HOME</a>
             <a href="#portfolio" onClick={() => setMobileMenuOpen(false)} className="text-[11px] tracking-[0.2em] font-light text-zinc-300 hover:text-white py-2.5 border-b border-white/5 transition-all">PORTFOLIO</a>
@@ -241,7 +247,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="flex flex-col gap-1 md:gap-2 select-none"
+            className="flex flex-col gap-1 md:gap-2 select-none transform-gpu"
           >
             <h1 className="font-cinzel text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-[0.2em] md:tracking-[0.25em] leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500 whitespace-nowrap">
               {profile.firstName}
@@ -256,7 +262,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="text-xs md:text-sm font-light text-zinc-400 max-w-lg leading-relaxed tracking-wider"
+            className="text-xs md:text-sm font-light text-zinc-400 max-w-lg leading-relaxed tracking-wider transform-gpu"
           >
             {profile.description}
           </motion.p>
@@ -267,7 +273,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.45 }}
-              className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5 p-6 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-xl max-w-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5 p-6 rounded-2xl border border-white/5 bg-zinc-900/90 sm:bg-white/[0.02] sm:backdrop-blur-xl max-w-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transform-gpu"
             >
               <div className="flex flex-col gap-1 border-l border-white/5 pl-3">
                 <span className="text-[8px] tracking-[0.25em] uppercase text-zinc-500 font-medium">Height</span>
@@ -301,12 +307,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="flex mt-2"
+            className="flex mt-2 transform-gpu"
           >
             {/* Play Showreel - Frosted Glass, Ambient Hover Glow */}
             <button
               onClick={() => setIsOpen(true)}
-              className="group px-8 py-4 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white text-[10px] tracking-[0.25em] uppercase font-medium transition-all duration-500 hover:scale-105 hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_35px_rgba(255,255,255,0.35)] flex items-center justify-center gap-3 cursor-pointer"
+              className="group px-8 py-4 rounded-full bg-zinc-900/90 sm:bg-white/[0.04] sm:backdrop-blur-xl border border-white/10 text-white text-[10px] tracking-[0.25em] uppercase font-medium transition-all duration-500 hover:scale-105 hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_35px_rgba(255,255,255,0.35)] flex items-center justify-center gap-3 cursor-pointer transform-gpu"
             >
               <span>PLAY SHOWREEL</span>
               <span className="text-xs group-hover:translate-x-0.5 transition-transform duration-300">🎬</span>
@@ -328,7 +334,7 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 transform-gpu"
             >
               <span className="h-[1px] w-6 bg-zinc-600"></span>
               <span className="text-[9px] md:text-[10px] tracking-[0.45em] text-zinc-500 font-light uppercase">
@@ -340,7 +346,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 1, delay: 0.1 }}
-              className="font-cinzel text-3xl md:text-5xl font-medium tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400"
+              className="font-cinzel text-3xl md:text-5xl font-medium tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400 transform-gpu"
             >
               HEADSHOTS
             </motion.h2>
@@ -350,7 +356,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="max-w-xs text-xs font-light text-zinc-500 leading-relaxed tracking-wider"
+            className="max-w-xs text-xs font-light text-zinc-500 leading-relaxed tracking-wider transform-gpu"
           >
             Exploring character duality and dramatic light. A series of fine-art portraits captured on medium format film.
           </motion.p>
@@ -364,7 +370,7 @@ export default function Home() {
               className={`relative group ${item.offset}`}
             >
               {/* Ambient Neon Glow behind card */}
-              <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-purple-500/20 via-purple-600/10 to-blue-500/25 opacity-0 group-hover:opacity-100 blur-3xl transition-all duration-700 scale-90 group-hover:scale-110 pointer-events-none" />
+              <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-purple-500/20 via-purple-600/10 to-blue-500/25 opacity-0 group-hover:opacity-100 blur-3xl transition-all duration-700 scale-90 group-hover:scale-110 pointer-events-none transform-gpu" />
 
               {/* Main Card */}
               <motion.div
@@ -373,7 +379,7 @@ export default function Home() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.8, delay: item.delay }}
                 whileHover="hover"
-                className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/20 backdrop-blur-sm cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 w-full"
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-950/90 sm:bg-zinc-950/20 sm:backdrop-blur-sm cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(147,51,234,0.15)] transition-all duration-500 w-full transform-gpu"
                 style={{ aspectRatio: item.aspect }}
               >
                 {/* Zooming Image container */}
@@ -382,12 +388,16 @@ export default function Home() {
                     hover: { scale: 1.05 }
                   }}
                   transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}
-                  className="w-full h-full"
+                  className="w-full h-full transform-gpu"
                 >
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover filter grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:contrast-100"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    quality={75}
+                    loading="lazy"
+                    className="object-cover filter grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:contrast-100"
                   />
                 </motion.div>
 
@@ -401,7 +411,7 @@ export default function Home() {
                     hover: { y: -4 }
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#09090b]/80 backdrop-blur-xl border border-white/10 flex flex-col gap-1 shadow-2xl transition-all duration-300 group-hover:border-purple-500/30 group-hover:bg-[#09090b]/90"
+                  className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#09090b]/95 sm:bg-[#09090b]/80 sm:backdrop-blur-xl border border-white/10 flex flex-col gap-1 shadow-2xl transition-all duration-300 group-hover:border-purple-500/30 group-hover:bg-[#09090b]/90 transform-gpu"
                 >
                   <span className="font-sans text-[10px] tracking-[0.3em] font-medium text-white/90 uppercase transition-colors duration-300 group-hover:text-purple-300">
                     {item.title}
@@ -439,17 +449,21 @@ export default function Home() {
           {profile.films.map((film) => (
             <motion.div
               key={film.id}
-              className="w-full"
+              className="w-full transform-gpu"
               whileHover={{ y: -10, scale: 1.02 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
             >
-              <div className="relative w-full aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/20 backdrop-blur-sm cursor-pointer group shadow-2xl transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.1)]">
+              <div className="relative w-full aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/90 sm:bg-zinc-950/20 sm:backdrop-blur-sm cursor-pointer group shadow-2xl transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(139,92,246,0.1)] transform-gpu">
                 {/* Poster Image */}
-                <div className="w-full h-full overflow-hidden">
-                  <img
+                <div className="relative w-full h-full overflow-hidden transform-gpu">
+                  <Image
                     src={film.image}
                     alt={film.title}
-                    className="w-full h-full object-cover filter grayscale contrast-110 group-hover:scale-105 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700 ease-out"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                    quality={75}
+                    loading="lazy"
+                    className="object-cover filter grayscale contrast-110 group-hover:scale-105 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700 ease-out"
                   />
                 </div>
 
@@ -457,7 +471,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90 group-hover:opacity-85 transition-opacity duration-300 pointer-events-none" />
 
                 {/* Translucent Details Overlay at bottom */}
-                <div className="absolute bottom-0 inset-x-0 p-5 bg-[#09090b]/80 backdrop-blur-md border-t border-white/10 flex flex-col gap-1.5 transition-colors duration-300 group-hover:bg-[#09090b]/95 group-hover:border-purple-500/20">
+                <div className="absolute bottom-0 inset-x-0 p-5 bg-[#09090b]/95 sm:bg-[#09090b]/80 sm:backdrop-blur-md border-t border-white/10 flex flex-col gap-1.5 transition-colors duration-300 group-hover:bg-[#09090b]/95 group-hover:border-purple-500/20 transform-gpu">
                   <div className="flex justify-between items-center gap-2">
                     <span className="font-sans text-[11px] tracking-[0.25em] font-medium text-white/90 uppercase truncate">
                       {film.title}
@@ -512,7 +526,7 @@ export default function Home() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6 transform-gpu">
               <div className="flex flex-col gap-1">
                 <label className="text-[9px] tracking-[0.2em] uppercase text-zinc-500 font-light ml-1">NAME</label>
                 <input 
@@ -555,7 +569,7 @@ export default function Home() {
               <button 
                 type="submit"
                 disabled={isSubmitting || submitted || !formState.name || !formState.email || !formState.message}
-                className="w-full py-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-xl border border-white/10 hover:border-white/30 text-zinc-300 hover:text-white text-[10px] tracking-[0.25em] uppercase font-semibold transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+                className="w-full py-4 rounded-xl bg-zinc-900/95 sm:bg-white/[0.04] sm:backdrop-blur-xl border border-white/10 hover:border-white/30 text-zinc-300 hover:text-white text-[10px] tracking-[0.25em] uppercase font-semibold transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer shadow-md disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed transform-gpu"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
@@ -572,7 +586,7 @@ export default function Home() {
           </div>
 
           {/* Right Column: Premium Minimalist Social Links Grid */}
-          <div className="flex flex-col justify-between p-8 md:p-10 rounded-3xl border border-white/10 bg-zinc-950/20 backdrop-blur-md h-full">
+          <div className="flex flex-col justify-between p-8 md:p-10 rounded-3xl border border-white/10 bg-zinc-950/90 sm:bg-zinc-950/20 sm:backdrop-blur-md h-full transform-gpu">
             <div className="flex flex-col gap-3 mb-8">
               <div className="flex items-center gap-3">
                 <span className="h-[1px] w-6 bg-zinc-700"></span>
@@ -595,7 +609,7 @@ export default function Home() {
                   href={profile.socials.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer transform-gpu"
                 >
                   <div className="flex justify-between items-start">
                     <svg
@@ -627,7 +641,7 @@ export default function Home() {
                   href={profile.socials.imdb}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer transform-gpu"
                 >
                   <div className="flex justify-between items-start">
                     <Film className="w-5 h-5 text-zinc-500 group-hover:text-purple-400 transition-colors" />
@@ -646,7 +660,7 @@ export default function Home() {
                   href={profile.socials.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer transform-gpu"
                 >
                   <div className="flex justify-between items-start">
                     <svg
@@ -677,7 +691,7 @@ export default function Home() {
                   href={profile.socials.agency}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                  className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-800/60 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-purple-500/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer transform-gpu"
                 >
                   <div className="flex justify-between items-start">
                     <LinkIcon className="w-5 h-5 text-zinc-500 group-hover:text-purple-400 transition-colors" />
@@ -720,7 +734,7 @@ export default function Home() {
             <motion.div 
               animate={{ y: [0, -32] }} 
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
-              className="absolute bottom-0 left-0 w-full h-3 bg-white" 
+              className="absolute bottom-0 left-0 w-full h-3 bg-white transform-gpu" 
             />
           </div>
         </button>
@@ -735,7 +749,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-2xl"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 sm:bg-black/90 sm:backdrop-blur-2xl transform-gpu"
           >
             {/* Click backdrop to close */}
             <div className="absolute inset-0 cursor-pointer" onClick={() => setIsOpen(false)} />
@@ -746,11 +760,11 @@ export default function Home() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-5xl aspect-video rounded-2xl border border-white/10 overflow-hidden bg-zinc-950 shadow-2xl z-10"
+              className="relative w-full max-w-5xl aspect-video rounded-2xl border border-white/10 overflow-hidden bg-zinc-950 shadow-2xl z-10 transform-gpu"
             >
               {/* Top Controls Overlay */}
               <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-20 pointer-events-none">
-                <span className="font-cinzel text-xs tracking-[0.3em] uppercase text-white/70 bg-black/30 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/5 pointer-events-auto">
+                <span className="font-cinzel text-xs tracking-[0.3em] uppercase text-white/70 bg-zinc-900/90 sm:bg-black/30 sm:backdrop-blur-md px-3.5 py-2 rounded-full border border-white/5 pointer-events-auto transform-gpu">
                   DINUKA SENANAYAKE — SHOWREEL
                 </span>
                 <button
@@ -802,7 +816,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-50 px-6 py-4 rounded-2xl bg-zinc-950/80 backdrop-blur-xl border border-purple-500/30 text-white shadow-2xl flex items-center gap-3"
+            className="fixed bottom-6 right-6 z-50 px-6 py-4 rounded-2xl bg-zinc-950/95 sm:bg-zinc-950/80 sm:backdrop-blur-xl border border-purple-500/30 text-white shadow-2xl flex items-center gap-3 transform-gpu"
           >
             <div className="h-2 w-2 rounded-full bg-purple-500 animate-ping" />
             <span className="text-[10px] tracking-[0.2em] font-medium uppercase">{toastMessage}</span>
